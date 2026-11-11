@@ -192,7 +192,8 @@ fun PantallaInicio(
         Button(
             onClick = {
                 if (!toquePermitido()) return@Button
-                onNavigateScore}
+                onNavigateScore()
+            }
         ) {
             Text("Score")
         }
