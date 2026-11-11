@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -160,6 +163,8 @@ fun PantallaInicio(
 
         Button(
             onClick = {
+                if (!toquePermitido()) return@Button
+
                 val nombre1 = nombreJugador1.trim()
                 val nombre2 = nombreJugador2.trim()
 
@@ -185,7 +190,9 @@ fun PantallaInicio(
         Spacer(modifier = Modifier.height(15.dp))
 
         Button(
-            onClick = onNavigateScore
+            onClick = {
+                if (!toquePermitido()) return@Button
+                onNavigateScore}
         ) {
             Text("Score")
         }
@@ -203,6 +210,7 @@ fun PantallaScore(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
             .padding(16.dp)
     ) {
         Text(
@@ -283,6 +291,7 @@ fun PantallaJuego(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
             .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -296,13 +305,15 @@ fun PantallaJuego(
             fontSize = 20.sp
         )
 
-        // Un botón para elegir cada columna.
+        //Btones para elegir cada columna
         Row(modifier = Modifier.fillMaxWidth()) {
             repeat(6) { columna ->
                 val columnaLlena = tablero[0][columna] != 0
 
                 Button(
                     onClick = {
+                        if (!toquePermitido()) return@Button
+
                         val fila = (5 downTo 0)
                             .firstOrNull { tablero[it][columna] == 0 }
 
@@ -336,7 +347,6 @@ fun PantallaJuego(
             }
         }
 
-        // La lista se dibuja en orden: fila 0 arriba y fila 5 abajo.
         LazyVerticalGrid(
             columns = GridCells.Fixed(6),
             modifier = Modifier
@@ -353,7 +363,7 @@ fun PantallaJuego(
                     modifier = Modifier
                         .aspectRatio(1f)
                         .padding(2.dp)
-                        .background(Color(0xFF1565C0), CircleShape),
+                        .background(Color(0xFF808080), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     if (ficha != 0) {
@@ -362,7 +372,7 @@ fun PantallaJuego(
                                 .fillMaxSize()
                                 .padding(4.dp)
                                 .background(
-                                    color = if (ficha == 1) Color.Red else Color.Yellow,
+                                    color = if (ficha == 1) Color.Red else Color.Blue,
                                     shape = CircleShape
                                 )
                         )
@@ -377,8 +387,10 @@ fun PantallaJuego(
         ) {
             Button(
                 onClick = {
+                    if (!toquePermitido()) return@Button
+
                     tablero = List(6) { List(6) { 0 } }
-                    turno = 1
+                    turno = (1..2).random()
                     resultado = ""
                     partidaFinalizada = false
                     juegoIniciado = true
@@ -391,6 +403,8 @@ fun PantallaJuego(
 
             Button(
                 onClick = {
+                    if (!toquePermitido()) return@Button
+
                     val ganador = if (turno == 1) jugador2 else jugador1
                     finalizarPartida(
                         ganador.id,
@@ -404,7 +418,10 @@ fun PantallaJuego(
             }
 
             Button(
-                onClick = onHome,
+                onClick = {
+                    if (!toquePermitido()) return@Button
+                    onHome
+                },
                 enabled = !enCurso,
                 modifier = Modifier.weight(1f)
             ) {
@@ -448,3 +465,13 @@ private fun hayCuatroEnLinea(
         total >= 4
     }
 }
+
+//No click a botones al mismo tiempo
+private fun toquePermitido(): Boolean {
+    val ahora = android.os.SystemClock.elapsedRealtime()
+    if (ahora - ultimoToque < 500L) return false
+
+    ultimoToque = ahora
+    return true
+}
+private var ultimoToque = 0L

@@ -25,6 +25,4 @@ interface JugadorDao {
 
     @Query("SELECT * FROM Jugador WHERE id = :id LIMIT 1")
     suspend fun buscarPorId(id: Int): Jugador?
-
-
 }
