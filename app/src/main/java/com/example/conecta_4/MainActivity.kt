@@ -420,7 +420,7 @@ fun PantallaJuego(
             Button(
                 onClick = {
                     if (!toquePermitido()) return@Button
-                    onHome
+                    onHome()
                 },
                 enabled = !enCurso,
                 modifier = Modifier.weight(1f)
