@@ -19,4 +19,12 @@ interface JugadorDao {
 
     @Delete
     suspend fun eliminar(jugador: Jugador)
+
+    @Query("SELECT * FROM Jugador WHERE nombre = :nombre COLLATE NOCASE LIMIT 1")
+    suspend fun buscarPorNombre(nombre: String): Jugador?
+
+    @Query("SELECT * FROM Jugador WHERE id = :id LIMIT 1")
+    suspend fun buscarPorId(id: Int): Jugador?
+
+
 }
