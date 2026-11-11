@@ -453,7 +453,7 @@ private fun hayCuatroEnLinea(
             var c = columna + deltaColumna * sentido
 
             while (
-                f in 0..5 && c in 0..5 && tablero[f][c] == ficha
+                f in 0..5 && c in 0..5 && tablero[c][f] == ficha
             ) {
                 total++
                 f += deltaFila * sentido
