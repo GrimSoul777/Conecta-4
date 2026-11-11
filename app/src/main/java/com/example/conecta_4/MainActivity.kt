@@ -438,10 +438,10 @@ private fun hayCuatroEnLinea(
     ficha: Int
 ): Boolean {
     val direcciones = listOf(
-        0 to 1,   // horizontal
-        1 to 0,   // vertical
-        1 to 1,   // diagonal
-        1 to -1   // diagonal inversa
+        0 to 1,   // horizontal ->
+        1 to 0,   // vertical <-
+        1 to 1,   // diagonal /
+        1 to -1   // diagonal inversa \
     )
 
     return direcciones.any { (deltaFila, deltaColumna) ->
@@ -452,16 +452,13 @@ private fun hayCuatroEnLinea(
             var c = columna + deltaColumna * sentido
 
             while (
-                f in 0..5 &&
-                c in 0..5 &&
-                tablero[f][c] == ficha
+                f in 0..5 && c in 0..5 && tablero[f][c] == ficha
             ) {
                 total++
                 f += deltaFila * sentido
                 c += deltaColumna * sentido
             }
         }
-
         total >= 4
     }
 }
