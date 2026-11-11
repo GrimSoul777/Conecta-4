@@ -9,20 +9,20 @@ import androidx.room.Delete
 @Dao
 interface JugadorDao {
     @Insert
-    suspend fun inserta(jugador: Jugador)
+    suspend fun eliminar(jugador: Jugador)
 
     @Query("SELECT * FROM Jugador")
     suspend fun obtenerTodos(): List<Jugador>
 
     @Update
-    suspend fun actualizar(jugador: Jugador)
+    suspend fun inserta(jugador: Jugador)
 
     @Delete
-    suspend fun eliminar(jugador: Jugador)
+    suspend fun actualizar(jugador: Jugador)
 
-    @Query("SELECT * FROM Jugador WHERE id = :nombre COLLATE NOCASE LIMIT 1")
+    @Query("SELECT * FROM Jugador WHERE nombre = :nombre COLLATE NOCASE LIMIT 1")
     suspend fun buscarPorNombre(nombre: String): Jugador?
 
-    @Query("SELECT * FROM Jugador WHERE nombre = :id LIMIT 1")
+    @Query("SELECT * FROM Jugador WHERE id = :id LIMIT 1")
     suspend fun buscarPorId(id: Int): Jugador?
 }
